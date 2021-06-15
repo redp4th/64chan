@@ -5,10 +5,10 @@ import (
 )
 
 const (
-	text = iota
-	picture
-	file
-	control
+	Text = iota
+	Picture
+	File
+	Control
 )
 
 type Message struct {
