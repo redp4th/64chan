@@ -14,8 +14,8 @@
 
 <script>
 import { router } from '../router'
+import { api } from '../service'
 
-import axios from 'axios'
 
 export default {
     name: 'Welcome',
@@ -30,12 +30,7 @@ export default {
                 router.push('/chat')
                 return
             }
-            axios.get('http://10.128.196.86:8000/api/v1/getcookie')
-                .then(response => {
-                    if (response.status != 200)
-                        return Promise.reject(response.data.message)
-                    return response.data
-                })
+            api.requestCookie()
                 .then(
                     data => {
                         localStorage.setItem('token', data.token)

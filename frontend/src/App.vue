@@ -6,9 +6,9 @@
 <script>
 import Vue from 'vue'
 import WebRTC from 'vue-webrtc'
-// import  * as io from 'socket.io-client'
+import  * as io from 'socket.io-client'
 
-// window.io = io
+window.io = io
 
 // Vue.component(WebRTC.name, WebRTC)
 Vue.use(WebRTC)

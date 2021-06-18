@@ -43,7 +43,7 @@ export const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (localStorage.getItem('token') == null) {
+    if (localStorage.getItem('token') == null && from.name != '/welcome') {
         next('/welcome')
         return
     }

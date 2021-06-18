@@ -7,6 +7,7 @@
                     <el-menu>
                         <channel-button
                             v-for="channel in channels"
+                            socketURL="https://10.128.196.86:3000/"
                             :key="channel"
                             :room="channel"
                             @change-focus="switchFocus"
@@ -24,15 +25,14 @@
             </el-header>
             <vue-webrtc ref="webrtc"
                 width="100%"
-
                 :roomId="focusing"
                 @error="onError" />
             <el-main id="dialog">
                 <message
                     v-for="message in filterMessage(focusing)"
-                    :key="cyrb53(message.sender+message.channel+message.timestamp)"
+                    :key="JSON.stringify(message)"
                     :message="message"
-                    :who="(message.sender == cookie) ? 'me' : 'other'"
+                    :from-me="cookie == message.sender"
                     >
                 </message>
             </el-main>
@@ -43,16 +43,25 @@
                         <el-button icon="el-icon-video-camera" size="mini" circle type="danger" @click="onLeave" v-else></el-button>
                     </el-col>
                     <el-col :span="2">
+                        <el-button icon="el-icon-monitor" size="mini" circle :type="screenSharing ? 'danger' : ''" :disabled="!recording" @click="shareScreen"></el-button>
+                    </el-col>
+                    <el-col :span="2">
                         <el-upload
                             accept="image/png, image/jpg, image/jpeg"
                             :show-file-list="false"
-                            action=""
+                            :data="{ sender: this.cookie, channel: this.focusing }"
+                            action="https://10.128.196.86:8000/api/v1/pic"
                         >
                         <el-button icon="el-icon-picture-outline" size="mini" circle></el-button>
                         </el-upload>
                     </el-col>
                     <el-col :span="2">
-                        <el-button icon="el-icon-link" size="mini" circle></el-button>
+                        <el-upload
+                            :show-file-list="false"
+                            :data="{ sender: this.cookie, channel: this.focusing }"
+                            action="https://10.128.196.86:8000/api/v1/upload">
+                            <el-button icon="el-icon-link" size="mini" circle></el-button>
+                        </el-upload>
                     </el-col>
                 </el-row>
                 <el-input
@@ -90,6 +99,7 @@ export default {
             focusing: null,
             textarea: '',
             recording: false,
+            screenSharing: false,
         }
     },
     computed: {
@@ -150,17 +160,11 @@ export default {
         onError(error, stream) {
             console.log('On Error Event', error, stream)
         },
-        cyrb53 (str) {
-            let seed = 0xbeefdead
-            let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
-            for (let i = 0, ch; i < str.length; i++) {
-                ch = str.charCodeAt(i);
-                h1 = Math.imul(h1 ^ ch, 2654435761);
-                h2 = Math.imul(h2 ^ ch, 1597334677);
+        shareScreen() {
+            if (!this.screenSharing) {
+                this.$refs.webrtc.shareScreen()
             }
-            h1 = Math.imul(h1 ^ (h1>>>16), 2246822507) ^ Math.imul(h2 ^ (h2>>>13), 3266489909);
-            h2 = Math.imul(h2 ^ (h2>>>16), 2246822507) ^ Math.imul(h1 ^ (h1>>>13), 3266489909);
-            return 4294967296 * (2097151 & h2) + (h1>>>0);
+            this.screenSharing = !this.screenSharing
         }
     },
 }

@@ -1,19 +1,37 @@
 <template>
-    <div class="message" :class="who">
-        <div class="message-bubble" :class="who">
-            {{ message.payload }}
+    <div class="message" :class="{ 'other': !fromMe }">
+        <div class="message-bubble" :class="{ 'other': !fromMe }">
+            <div v-if="message.kind == code.text">
+                {{ message.payload }}
+            </div>
+            <div v-else-if="message.kind == code.picture">
+                <img :src="`data:image/jpeg;base64,${message.payload}`" />
+            </div>
+            <div v-else-if="message.kind == code.file">
+                <el-link icon="el-icon-paperclip" :href="message.payload" target="_blank">{{ message.payload.split('/').pop() }}</el-link>
+            </div>
+            <div v-else>
+                ERROR MESSAGE
+            </div>
         </div>
-        <div v-if="who == 'other'" style="font-size: 0.9em;">{{ message.sender }}</div>
+        <div v-if="!fromMe" style="font-size: 0.9em;">{{ message.sender }}</div>
     </div>
 </template>
 
 <script>
+import { code } from '../service'
+
 export default {
     name: 'Message',
     props: {
         message: Object,
-        who: String,
+        fromMe: Boolean,
     },
+    data() {
+        return {
+            code,
+        }
+    }
 }
 </script>
 
@@ -47,5 +65,9 @@ export default {
     float: left;
 }
 
+img {
+    max-width: 450px;
+    max-height: 450px;
+}
 
 </style>

@@ -56,7 +56,7 @@ func startup(c *pkg.Client) {
 			Channel:   channel,
 			Kind:      4,
 			Timestamp: time.Now(),
-			Payload:   nil,
+			Payload:   "",
 		}
 		raw, _ := json.Marshal(message)
 		c.Inject(raw)

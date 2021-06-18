@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"nmb/router"
 )
@@ -8,9 +9,10 @@ import (
 func main() {
 	r := router.InitRouter()
 	s := &http.Server{
-		Addr:    ":8000",
-		Handler: r,
+		Addr:           ":8000",
+		Handler:        r,
+		MaxHeaderBytes: 16 << 20,
 	}
-	// log.Println(s.ListenAndServeTLS("cert/cert.pem", "cert/key.pem"))
-	s.ListenAndServe()
+	log.Println(s.ListenAndServeTLS("localhost.crt", "localhost.key"))
+	// s.ListenAndServe()
 }

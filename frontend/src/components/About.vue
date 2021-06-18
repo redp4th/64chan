@@ -7,7 +7,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import axios from 'axios'
+import { api } from '../service'
 
 export default {
     name: 'About',
@@ -17,12 +17,7 @@ export default {
     methods: {
         ...mapMutations('jar', ['setCookie']),
         replaceCookie() {
-            axios.get('http://localhost:8000/api/v1/getcookie')
-                .then(response => {
-                    if (response.status != 200)
-                        return Promise.reject(response.data.message)
-                    return response.data
-                })
+            api.requestCookie()
                 .then(
                     data => {
                         localStorage.setItem('token', data.token)

@@ -44,7 +44,7 @@ func CreateChannel(c *gin.Context) {
 			Sender:    "server",
 			Channel:   channel.Name,
 			Kind:      4,
-			Payload:   nil,
+			Payload:   "",
 			Timestamp: time.Now(),
 		}
 		raw, _ := json.Marshal(message)

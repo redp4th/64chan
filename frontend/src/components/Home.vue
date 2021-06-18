@@ -18,10 +18,9 @@
 
 <script>
 import Sidebar from './Sidebar.vue'
-
 import { mapMutations } from 'vuex'
-
 import { router } from '../router'
+import { api } from '../service'
 
 export default {
     name: 'Home',
@@ -38,7 +37,7 @@ export default {
         ...mapMutations('jar', ['setCookie']),
     },
     mounted() {
-        this.socket = new WebSocket('ws://10.128.196.86:8000/api/v1/ws')
+        this.socket = api.newSecureSocket()
         this.socket.onerror = (evt) => {
             console.log(evt)
             this.$notify.error({
@@ -59,6 +58,7 @@ export default {
 
         this.socket.onmessage = (evt) => {
             let message = JSON.parse(evt.data)
+            console.log(message)
             this.cache(message)
         }
 

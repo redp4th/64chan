@@ -14,7 +14,7 @@ const mutations = {
 
 const getters = {
     channels: state => Object.keys(state.messages),
-    filterMessage: state => channel => state.messages[channel].filter(message => message.kind == code.text)
+    filterMessage: state => channel => state.messages[channel].filter(message => message.kind != code.control)
 }
 
 export default {

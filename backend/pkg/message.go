@@ -16,5 +16,5 @@ type Message struct {
 	Channel   string    `json:"channel"`
 	Kind      uint64    `json:"kind"`
 	Timestamp time.Time `json:"timestamp"`
-	Payload   []byte    `json:"payload"`
+	Payload   string    `json:"payload"`
 }
